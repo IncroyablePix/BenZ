@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  benz_db:
+    image: postgres:14.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: "benzdb"
+      POSTGRES_DB: "benzdb"
+      POSTGRES_PASSWORD: "benzdb"
+    ports:
+      - "3307:5432"
+    volumes:
+      - C:/TEMP/BENZ_DB:/var/lib/postgresql/data
+
+  benz_api:
+    # image: benz_api:latest
+    build: ./BenZ-API
+    depends_on:
+      - benz_db
+    ports:
+      - "8002:80"
+    environment:
+      POSTGRES_PASSWORD: "benzdb"
+      POSTGRES_DB: "benzdb"
+      POSTGRES_USER: "benzdb"
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: benz_db
+      JWT_PRIVATE_KEY: "benz=api=private=key"
+      JWT_ISSUER: "benz.lan"
+      JWT_AUDIENCE: "benz.lan"
+      CORS_DOMAINS: "http://localhost:8001"
+    volumes:
+      - C:/TEMP/BENZ_MIGRATIONS:/var/benz/migrations
+
+  benz_ui:
+    # image: benz_ui:latest
+    build: ./BenZ-UI
+    depends_on:
+      - benz_api
+    ports: 
+      - "8001:80"
+    environment:
+      REACT_APP_API_URL: "http://localhost:8002"
+

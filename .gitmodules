@@ -1,0 +1,6 @@
+[submodule "BenZ-UI"]
+	path = BenZ-UI
+	url = git@github.com:IncroyablePix/BenZ-UI.git
+[submodule "BenZ-API"]
+	path = BenZ-API
+	url = git@github.com:IncroyablePix/BenZ-API.git
